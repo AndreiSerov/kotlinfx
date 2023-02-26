@@ -18,10 +18,12 @@ import javafx.fxml.FXMLLoader
  * @author andreiserov
  */
 @Component
-class StageListener(
-    @Value("\${spring.application.ui.title}") applicationTitle: String,
-    @Value("classpath:/ui.fxml") fxml: Resource, applicationContext: ApplicationContext
-) : ApplicationListener<StageReadyEvent?> {
+internal class StageListener(
+    @Value("\${spring.application.ui.title}")
+    applicationTitle: String,
+    @Value("classpath:/ui.fxml")
+    fxml: Resource, applicationContext: ApplicationContext
+) : ApplicationListener<StageReadyEvent> {
     private val applicationTitle: String
     private val fxml: Resource
     private val applicationContext: ApplicationContext
@@ -35,13 +37,13 @@ class StageListener(
     override fun onApplicationEvent(stageReadyEvent: StageReadyEvent) {
         try {
             val stage: Stage = stageReadyEvent.stage
-            val url: URL = fxml.getURL()
+            val url: URL = fxml.url
             val fxmlLoader = FXMLLoader(url)
-            fxmlLoader.setControllerFactory(applicationContext::getBean)
+            fxmlLoader.setControllerFactory { applicationContext.getBean(it) }
             val root: Parent = fxmlLoader.load()
             val scene = Scene(root, 600.0, 600.0)
-            stage.setScene(scene)
-            stage.setTitle(applicationTitle)
+            stage.scene = scene
+            stage.title = applicationTitle
             stage.show()
         } catch (e: IOException) {
             throw RuntimeException(e)

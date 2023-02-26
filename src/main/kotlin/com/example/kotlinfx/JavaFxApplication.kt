@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
+import java.util.function.*
+
 
 /**
  * @author andreiserov
@@ -17,18 +19,23 @@ class JavafxApplication : Application() {
 
     private var context: ConfigurableApplicationContext? = null
 
-
     @Throws(Exception::class)
     override fun init() {
         val initializer =
-            ApplicationContextInitializer<GenericApplicationContext?> { genericApplicationContext ->
-                genericApplicationContext.registerBean(Application::class.java, this@JavafxApplication)
-                genericApplicationContext.registerBean(Parameters::class.java, parameters)
-                genericApplicationContext.registerBean(HostServices::class.java, hostServices)
+            ApplicationContextInitializer<GenericApplicationContext> { genericApplicationContext ->
+                genericApplicationContext.registerBean(
+                    Application::class.java,
+                    Supplier { this@JavafxApplication })
+                genericApplicationContext.registerBean(
+                    Parameters::class.java,
+                    Supplier { parameters })
+                genericApplicationContext.registerBean(
+                    HostServices::class.java,
+                    Supplier { hostServices })
             }
         context = SpringApplicationBuilder().sources(KotlinFxApplication::class.java)
             .initializers(initializer)
-            .build().run(*parameters.raw.toArray { arrayOf<String>() })
+            .build().run(*parameters.raw.toTypedArray())
     }
 
     @Throws(Exception::class)
