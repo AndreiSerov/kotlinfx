@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.0.3"
+    id("org.springframework.boot") version "2.7.9"
     id("io.spring.dependency-management") version "1.1.0"
     id("org.openjfx.javafxplugin") version ("0.0.13")
 
@@ -21,14 +21,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
 //    implementation("org.liquibase:liquibase-core")
-//    implementation("org.jetbrains.exposed:exposed-core:0.41.1")
-//    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.41.1")
+    implementation("org.jetbrains.exposed:exposed-core:0.41.1")
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.41.1")
+    runtimeOnly("com.h2database:h2:2.1.214")
+//    implementation("org.xerial:sqlite-jdbc:3.41.0.0")
     implementation("org.openjfx:javafx-controls:19.0.2.1")
-//    implementation("org.openjfx:javafx-base:19.0.2.1")
-//    implementation("org.openjfx:javafx-fxml:19.0.2.1")
-//    compileOnly("org.openjfx:javafx-fxml:19.0.2.1")
-//    implementation("org.openjfx:javafx:19.0.2.1")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

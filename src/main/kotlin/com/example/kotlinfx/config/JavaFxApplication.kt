@@ -1,5 +1,6 @@
-package com.example.kotlinfx
+package com.example.kotlinfx.config
 
+import com.example.kotlinfx.KotlinFxApplication
 import javafx.application.Application
 import javafx.application.HostServices
 import javafx.application.Platform
@@ -9,7 +10,9 @@ import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
 import java.util.function.*
+import kotlin.reflect.jvm.jvmName
 
 
 /**
@@ -17,7 +20,8 @@ import java.util.function.*
  */
 class JavafxApplication : Application() {
 
-    private var context: ConfigurableApplicationContext? = null
+    lateinit var context: ConfigurableApplicationContext
+    private val stage: Stage = Stage()
 
     @Throws(Exception::class)
     override fun init() {
@@ -32,25 +36,34 @@ class JavafxApplication : Application() {
                 genericApplicationContext.registerBean(
                     HostServices::class.java,
                     Supplier { hostServices })
+                genericApplicationContext.registerBean(
+                    HostServices::class.java,
+                    Supplier { hostServices })
+                genericApplicationContext.registerBean(
+                    Stage::class.java,
+                    Supplier { stage }
+                )
             }
-        context = SpringApplicationBuilder().sources(KotlinFxApplication::class.java)
+
+        context = SpringApplicationBuilder()
+            .sources(KotlinFxApplication::class.java)
             .initializers(initializer)
-            .build().run(*parameters.raw.toTypedArray())
+            .build()
+            .run(*parameters.raw.toTypedArray())
     }
 
     @Throws(Exception::class)
     override fun start(primaryStage: Stage) {
-        context?.publishEvent(StageReadyEvent(primaryStage))
+        context.publishEvent(StageReadyEvent(stage))
     }
 
     @Throws(Exception::class)
     override fun stop() {
-        context?.close()
+        context.close()
         Platform.exit()
     }
 
     internal inner class StageReadyEvent(source: Any) : ApplicationEvent(source) {
-        val stage: Stage
-            get() = Stage::class.java.cast(getSource())
+        val stage: Stage get() = Stage::class.java.cast(getSource())
     }
 }

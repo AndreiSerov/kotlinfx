@@ -1,5 +1,6 @@
 package com.example.kotlinfx
 
+import com.example.kotlinfx.config.JavafxApplication
 import javafx.application.Application
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
@@ -12,8 +13,4 @@ class KotlinFxApplication {
             Application.launch(JavafxApplication::class.java, *args)
         }
     }
-}
-
-fun main(args: Array<String>) {
-    Application.launch(JavafxApplication::class.java, *args)
 }
