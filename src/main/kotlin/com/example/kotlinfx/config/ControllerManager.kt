@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component
 @Component
 class ControllerManager(
     @Value("classpath:/table_view.fxml")
-    var table: Resource,
+    private var table: Resource,
     @Value("classpath:/contact_view.fxml")
-    var contact: Resource,
-    val applicationContext: ApplicationContext
+    private var contact: Resource,
+    private val applicationContext: ApplicationContext
 ) {
 
     val contactViewScene: Scene by lazy { buildScene(contact) }
